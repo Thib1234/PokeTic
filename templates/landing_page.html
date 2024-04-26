@@ -6,7 +6,8 @@
     <title>Landing Page Pokémon</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-blue-500">
+<body class="bg-red-500 m-0 p-0 max-w-full">
+
     <div class="container mx-auto text-center p-4">
         <h1 class="text-4xl text-white font-bold">Bienvenue dans le monde Pokémon!</h1>
         <nav class="mt-4">
@@ -19,7 +20,60 @@
                 <li><a href="/arena_app/" class="text-lg text-white hover:text-gray-300">Arena App</a></li>
             </ul>
         </nav>
-        <!-- Plus de contenu ici -->
     </div>
+  <div class="relative h-screen w-full flex justify-center items-center">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/5/5d/Map_Pok%C3%A9mon_Red_%26_Blue_FR.png" alt="Map Pokémon Red & Blue FR" class="w-full h-full object-contain" usemap="#image-map">
+    <map name="image-map">
+    <area target="" alt="cramois'ile" title="cramois'ile" href="" coords="245,901,290,944" shape="rect" onclick="showInfo('cramois\'ile')">
+    <area target="" alt="Bourg Palette" title="Bourg Palette" href="" coords="247,717,289,759" shape="rect" onclick="showInfo('Bourg Palette')">
+    <area target="" alt="Jadielle" title="Jadielle" href="" coords="245,502,290,546" shape="rect" onclick="showInfo('Jadielle')">
+    <area target="" alt="foret de jade" title="foret de jade" href="" coords="267,383,25" shape="circle" onclick="showInfo('foret de jade')">
+    <area target="" alt="cave taupiqueur 1" title="cave taupiqueur 1" href="" coords="267,294,21" shape="circle" onclick="showInfo('cave taupiqueur 1')">
+    <area target="" alt="Argenta" title="Argenta" href="" coords="245,192,288,232" shape="rect" onclick="showInfo('Argenta')">
+    <area target="" alt="Azuria" title="Azuria" href="" coords="634,188,675,235" shape="rect" onclick="showInfo('Azuria')">
+    <area target="" alt="Mont Sélénite" title="Mont Sélénite" href="" coords="467,211,23" shape="circle" onclick="showInfo('Mont Sélénite')">
+    <area target="" alt="Céladopole" title="Céladopole" href="" coords="460,423,505,384" shape="rect" onclick="showInfo('Céladopole')">
+    <area target="" alt="Safrania" title="Safrania" href="" coords="632,380,676,423" shape="rect" onclick="showInfo('Safrania')">
+    <area target="" alt="Lavanville" title="Lavanville" href="" coords="875,382,921,424" shape="rect" onclick="showInfo('Lavanville')">
+    <area target="" alt="Carmin-sur-mer" title="Carmin-sur-mer" href="" coords="633,545,676,585" shape="rect" onclick="showInfo('Carmin-sur-mer')">
+    <area target="" alt="cave taupiqueur 2" title="cave taupiqueur 2" href="" coords="728,560,25" shape="circle" onclick="showInfo('cave taupiqueur 2')">
+    <area target="" alt="Parmanie" title="Parmanie" href="" coords="572,800,614,840" shape="rect" onclick="showInfo('Parmanie')">
+    <area target="" alt="Plateau Indigo" title="Plateau Indigo" href="" coords="52,142,91,185" shape="rect" onclick="showInfo('Plateau Indigo')">
+    <area target="" alt="Route Victoire" title="Route Victoire" href="" coords="71,309,27" shape="circle" onclick="showInfo('Route Victoire')">
+    <area target="" alt="Grotte Azurée" title="Grotte Azurée" href="" coords="593,118,23" shape="circle" onclick="showInfo('Grotte Azurée')">
+    <area target="" alt="Iles écume" title="Iles écume" href="" coords="436,927,24" shape="circle" onclick="showInfo('Iles écume')">
+    <area target="" alt="Parc Safari" title="Parc Safari" href="" coords="596,761,24" shape="circle" onclick="showInfo('Parc Safari')">
+    <area target="" alt="Grotte" title="Grotte" href="" coords="898,211,26" shape="circle" onclick="showInfo('Grotte')">
+    <area target="" alt="Centrale" title="Centrale" href="" coords="929,275,26" shape="circle" onclick="showInfo('Centrale')">
+    <area target="" alt="Tour Pokémon" title="Tour Pokémon" href="" coords="937,365,26" shape="circle" onclick="showInfo('Tour Pokémon')">
+</map>
+      <div id="modal" class="fixed inset-0 flex items-center justify-center p-4 bg-black bg-opacity-50 hidden">
+    <div class="bg-white p-4 rounded shadow-lg max-w-md w-full">
+        <h2 id="modalTitle" class="text-xl font-bold mb-2"></h2>
+        <p id="modalContent" class="mb-4"></p>
+        <button class="bg-blue-500 text-white p-2 rounded" onclick="closeModal()">Fermer</button>
+    </div>
+</div>
+</div>
+
+    <aside class="fixed left-0 top-0 h-screen w-64 bg-white overflow-auto p-4 shadow-lg">
+    <h2 class="text-xl font-bold mb-4">Pokémons de {{ joueur.nom }}</h2>
+    <ul class="space-y-2">
+    {% for pokemon in joueur.pokemons.all %}
+        <li class="border-b pb-2">{{ pokemon.Nom }}</li>
+    {% endfor %}
+    </ul>
+</aside>
+<script>
+    function showInfo(townName) {
+        document.getElementById('modalTitle').textContent = townName;
+        document.getElementById('modalContent').textContent = 'Informations sur ' + townName;
+        document.getElementById('modal').classList.remove('hidden');
+    }
+
+    function closeModal() {
+        document.getElementById('modal').classList.add('hidden');
+    }
+</script>
 </body>
 </html>

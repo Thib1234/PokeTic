@@ -1,5 +1,9 @@
 from django.shortcuts import render
 
+from joueur_app.models import Joueur
+
 
 def index(request):
-    return render(request, 'landing_page.html')
+    joueur = Joueur.objects.get(nom='thib')
+
+    return render(request, 'landing_page.html', {'joueur': joueur})
