@@ -86,7 +86,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'poke_tic',
         'USER': 'postgres',
-        'PASSWORD': '',
+        'PASSWORD': 'thib',
         'HOST': 'localhost',
         'PORT': 5432,
     }

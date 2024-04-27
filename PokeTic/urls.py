@@ -4,7 +4,6 @@ from .views import index
 
 urlpatterns = [
     path('', index),
-    path('fsqdfqsfqsdf/', index),
     path('admin/', admin.site.urls),
     path('pokemon_app/', include('pokemon_app.urls')),
     path('combat_app/', include('combat_app.urls')),
