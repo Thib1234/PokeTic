@@ -1,7 +1,5 @@
 from django.db import models
 
-from django.db import models
-
 
 class Type(models.Model):
     Nom = models.CharField(max_length=50)
