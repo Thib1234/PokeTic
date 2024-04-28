@@ -4,7 +4,7 @@ from .serializers import PokemonSerializer, TypeSerializer
 
 
 class PokemonViewSet(viewsets.ModelViewSet):
-    queryset = Pokemon.objects.all()
+    queryset = Pokemon.objects.all().order_by('id')
     serializer_class = PokemonSerializer
 
 
