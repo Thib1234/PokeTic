@@ -3,16 +3,12 @@ from django.core.cache import cache
 import requests
 from pokemon_app.models import Pokemon, Type, Talent
 
+
 POKEAPI_URL = "https://pokeapi.co/api/v2/"
 
 
 def get_pokemon_data(pokemon_name):
     response = requests.get(f"{POKEAPI_URL}pokemon/{pokemon_name}")
-    return response.json()
-
-
-def get_type_data(type_name):
-    response = requests.get(f"{POKEAPI_URL}type/{type_name}")
     return response.json()
 
 
@@ -24,10 +20,6 @@ def get_evolution_chain(chain_id):
 def handle_evolution_chain(chain, evolves_from=None):
     # Récupérer les données du Pokémon
     pokemon_data = get_pokemon_data(chain['species']['name'])
-
-    # Ignorer les Pokémon dont l'ID est supérieur à 151
-    if pokemon_data['id'] > 151:
-        return
 
     # Créer un nouvel objet Pokemon pour l'espèce actuelle
     pokemon, created = Pokemon.objects.get_or_create(
@@ -47,7 +39,9 @@ def handle_evolution_chain(chain, evolves_from=None):
         pokemon.types.add(type)
 
     for ability_data in pokemon_data['abilities']:
-        talent, created = Talent.objects.get_or_create(Nom=ability_data['ability']['name'])
+        talent_cache = ability_data.get('is_hidden',
+                                        False)  # Utilisez une valeur par défaut si 'is_hidden' n'est pas présent
+        talent, created = Talent.objects.get_or_create(Nom=ability_data['ability']['name'], talent_cache=talent_cache)
         pokemon.talents.add(talent)
 
     pokemon.save()
@@ -66,29 +60,13 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         self.stdout.write('Starting to populate the database...')
-        # Utiliser cette fonction pour chaque chaîne d'évolution de la première génération
-        for i in range(1, 152):  # Les ID de 1 à 151 correspondent à la première génération
-            self.stdout.write(f"Processing evolution chain {i}...")
+        # Récupérer le nombre total de chaînes d'évolution
+        response = requests.get(f"{POKEAPI_URL}evolution-chain")
+        total_chains = response.json()['count']
+
+        # Utiliser cette fonction pour chaque chaîne d'évolution
+        for i in range(1, total_chains + 1):
             chain_data = get_evolution_chain(i)
             handle_evolution_chain(chain_data['chain'])
-
-        # Utiliser cette fonction pour chaque type de Pokémon
-        for type_name in ['grass', 'poison', 'fire', 'flying', 'water', 'bug', 'normal', 'ground', 'fighting',
-                          'psychic', 'rock', 'electric', 'steel', 'ice', 'ghost', 'dragon']:
-            self.stdout.write(f"Processing type {type_name}...")
-            type_data = get_type_data(type_name)
-
-            # Créer un nouvel objet Type
-            type, created = Type.objects.get_or_create(Nom=type_data['name'])
-
-            # Ajouter les points forts et faibles
-            for damage_relation in type_data['damage_relations']['double_damage_to']:
-                point_fort, created = Type.objects.get_or_create(Nom=damage_relation['name'])
-                type.points_forts.add(point_fort)
-            for damage_relation in type_data['damage_relations']['double_damage_from']:
-                point_faible, created = Type.objects.get_or_create(Nom=damage_relation['name'])
-                type.points_faibles.add(point_faible)
-
-            type.save()
 
         self.stdout.write('Finished populating the database.')

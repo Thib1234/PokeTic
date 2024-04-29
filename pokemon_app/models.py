@@ -11,10 +11,11 @@ class Type(models.Model):
 
 class Talent(models.Model):
     Nom = models.CharField(max_length=50)
-    tc = models.BooleanField()
+    talent_cache = models.BooleanField(default=False)
 
     def __str__(self):
         return self.Nom
+
 
 
 class Pokemon(models.Model):
@@ -27,7 +28,8 @@ class Pokemon(models.Model):
     Image = models.CharField(max_length=500)
     types = models.ManyToManyField(Type)
     talents = models.ManyToManyField(Talent)
-    evolves_from = models.ForeignKey('self', on_delete=models.SET_NULL, null=True, related_name='evolves_to')
+    evolves_from = models.ForeignKey('self', on_delete=models.SET_NULL, null=True, related_name='pre_evolution')
+    evolves_to = models.ForeignKey('self', on_delete=models.SET_NULL, null=True, related_name='next_evolution')
 
     def __str__(self):
         return self.Nom

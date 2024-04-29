@@ -21,8 +21,9 @@ class PokemonSerializer(serializers.ModelSerializer):
     types = TypeSerializer(many=True)
     talents = TalentSerializer(many=True)
     evolves_from = serializers.StringRelatedField()
+    evolves_to = serializers.StringRelatedField()
 
     class Meta:
         model = Pokemon
         fields = ['Nom', 'Hp', 'Experience', 'Attaque', 'Defense', 'Vitesse', 'Image', 'types', 'talents',
-                  'evolves_from']
+                  'evolves_from', 'evolves_to']
