@@ -66,22 +66,18 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         self.stdout.write('Starting to populate the database...')
-        # Utiliser cette fonction pour chaque chaîne d'évolution de la première génération
-        for i in range(1, 152):  # Les ID de 1 à 151 correspondent à la première génération
+        for i in range(1, 152):
             self.stdout.write(f"Processing evolution chain {i}...")
             chain_data = get_evolution_chain(i)
             handle_evolution_chain(chain_data['chain'])
 
-        # Utiliser cette fonction pour chaque type de Pokémon
         for type_name in ['grass', 'poison', 'fire', 'flying', 'water', 'bug', 'normal', 'ground', 'fighting',
                           'psychic', 'rock', 'electric', 'steel', 'ice', 'ghost', 'dragon']:
             self.stdout.write(f"Processing type {type_name}...")
             type_data = get_type_data(type_name)
 
-            # Créer un nouvel objet Type
             type, created = Type.objects.get_or_create(Nom=type_data['name'])
 
-            # Ajouter les points forts et faibles
             for damage_relation in type_data['damage_relations']['double_damage_to']:
                 point_fort, created = Type.objects.get_or_create(Nom=damage_relation['name'])
                 type.points_forts.add(point_fort)

@@ -17,7 +17,6 @@ class Talent(models.Model):
         return self.Nom
 
 
-
 class Pokemon(models.Model):
     Nom = models.CharField(max_length=50, unique=True)
     Hp = models.IntegerField(null=True)
