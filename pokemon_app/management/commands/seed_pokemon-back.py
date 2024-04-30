@@ -8,19 +8,17 @@ class Command(BaseCommand):
     help = 'Populate database with Pokemon data'
 
     def fetch_data_from_api(self, url):
-        """ Fetch and cache data from the API to minimize repeated requests. """
         data = cache.get(url)
         if not data:
             response = requests.get(url)
             if response.status_code == 200:
                 data = response.json()
-                cache.set(url, data, timeout=86400)  # Cache for one day
+                cache.set(url, data, timeout=86400)
             else:
                 response.raise_for_status()
         return data
 
     def get_or_create_pokemon(self, data, french_name):
-        """ Create or retrieve a Pokémon with its basic data, handling cases where data might be incomplete. """
         try:
             hp = data['stats'][0]['base_stat']
             experience = data['base_experience']

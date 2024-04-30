@@ -1,5 +1,4 @@
 from django.core.management.base import BaseCommand
-from django.core.cache import cache
 import requests
 from pokemon_app.models import Pokemon, Type, Talent
 
@@ -22,14 +21,11 @@ def get_evolution_chain(chain_id):
 
 
 def handle_evolution_chain(chain, evolves_from=None):
-    # Récupérer les données du Pokémon
     pokemon_data = get_pokemon_data(chain['species']['name'])
 
-    # Ignorer les Pokémon dont l'ID est supérieur à 151
     if pokemon_data['id'] > 151:
         return
 
-    # Créer un nouvel objet Pokemon pour l'espèce actuelle
     pokemon, created = Pokemon.objects.get_or_create(
         Nom=pokemon_data['name'],
         Hp=pokemon_data['stats'][0]['base_stat'],
@@ -41,7 +37,6 @@ def handle_evolution_chain(chain, evolves_from=None):
         evolves_from=evolves_from,
     )
 
-    # Ajouter les types et les talents
     for type_data in pokemon_data['types']:
         type, created = Type.objects.get_or_create(Nom=type_data['type']['name'])
         pokemon.types.add(type)
@@ -52,7 +47,6 @@ def handle_evolution_chain(chain, evolves_from=None):
 
     pokemon.save()
 
-    # Parcourir toutes les évolutions possibles
     for evolution in chain['evolves_to']:
         next_pokemon = handle_evolution_chain(evolution, evolves_from=pokemon)
         pokemon.evolves_to = next_pokemon
