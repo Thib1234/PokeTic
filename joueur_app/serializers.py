@@ -14,4 +14,4 @@ class JoueurSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Joueur
-        fields = ['username', 'argent', 'pokemons', 'badges', 'password']
+        fields = ['argent', 'pokemons', 'badges', 'password']
