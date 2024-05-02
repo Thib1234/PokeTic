@@ -9,6 +9,7 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import action
 
+
 class JoueurViewSet(viewsets.ModelViewSet):
     queryset = Joueur.objects.all()
     serializer_class = JoueurSerializer
@@ -27,9 +28,11 @@ class JoueurViewSet(viewsets.ModelViewSet):
     def me(self, request):
         joueur = self.request.user.joueur
         data = {
-            'nom': joueur.nom,
+            'username': joueur.user.username,  # Accéder au username du User associé
             'argent': joueur.argent,
             'pokemons': list(joueur.pokemons.values()),
             # Ajoutez d'autres champs si nécessaire
         }
         return JsonResponse(data)
+
+

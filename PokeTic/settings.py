@@ -43,7 +43,6 @@ INSTALLED_APPS = [
     'joueur_app',
     'dresseur_app',
     'combat_app',
-    'PokeTic',
 ]
 
 MIDDLEWARE = [
